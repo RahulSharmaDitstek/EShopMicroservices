@@ -1,0 +1,10 @@
+﻿global using Catalog.API.Data.TableConfigurations;
+global using System.Reflection;
+global using Catalog.API.Data;
+global using BuildingBlocks.CQRS;
+global using Catalog.API.Models;
+global using Carter;
+global using MediatR;
+global using Mapster;
+global using Marten;
+global using Catalog.API.Products.GetProductById;
