@@ -11,6 +11,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.0" />
 		<PackageReference Include="Carter" Version="8.0.0" />
 		<PackageReference Include="Marten" Version="8.3.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />

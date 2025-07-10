@@ -20,6 +20,3 @@ public class DeleteProductEndpoint : ICarterModule
 
     }
 }
-
-public record DeleteProductCommand(Guid Id) : IQuery<DeleteProductResult>;
-public record DeleteProductResult(bool IsSuccess);
