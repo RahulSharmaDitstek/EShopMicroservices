@@ -24,8 +24,7 @@ public static class DIConfigurations
             options.Connection(connString);
         }).UseLightweightSessions();
 
-        services.AddHealthChecks()
-         .AddNpgSql(connString);
+        services.AddHealthChecks().AddNpgSql(connString);
 
         return services;
     }
