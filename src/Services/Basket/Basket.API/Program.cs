@@ -7,7 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 //Add services to the container.
 builder.Services.AddBasketServices(builder.Configuration);
 
-builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 var app = builder.Build();
 
