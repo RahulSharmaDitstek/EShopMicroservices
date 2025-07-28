@@ -1,0 +1,16 @@
+﻿global using Ordering.API.DependencyInjection;
+global using Ordering.Application.DependencyInjection;
+global using Ordering.Infrastructure.DependencyInjection;
+global using Ordering.Infrastructure.Data.Extensions;
+global using Mapster;
+global using Carter;
+global using Ordering.Application.Dtos;
+global using MediatR;
+global using Ordering.Application.Orders.Commands.CreateOrder;
+global using Ordering.Application.Orders.Commands.UpdateOrder;
+global using Ordering.Application.Orders.Commands.DeleteOrder;
+global using Ordering.Application.Orders.Queries.GetOrderByName;
+global using Ordering.Application.Orders.Queries.GetOrdersByCustomer;
+global using BuildingBlocks.Pagination;
+global using Ordering.Application.Orders.Queries.GetOrders;
+global using BuildingBlocks.Exceptions.Handler;

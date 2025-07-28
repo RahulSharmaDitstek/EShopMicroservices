@@ -1,6 +1,4 @@
-﻿using BuildingBlocks.Exceptions.Handler;
-
-namespace Basket.API.DependencyInjection;
+﻿namespace Basket.API.DependencyInjection;
 public static class DIConfigurations
 {
     public static IServiceCollection AddBasketServices(this IServiceCollection services, ConfigurationManager configuration)

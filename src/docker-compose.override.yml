@@ -23,6 +23,17 @@ services:
     volumes:
       - postgres_catalog:/var/lib/postgresql/data
 
+  # orderdb:
+  #   container_name: orderdb
+  #   environment:
+  #     - ACCEPT_EULA=Y
+  #     - Rahul7884_PASSWORD=Rahul@2000    
+  #   restart: always
+  #   ports:
+  #     - "1433:1433"
+  #   volumes:
+  #     - postgres_catalog:/var/lib/postgresql/data
+
   distributedcache:
     container_name: distributedcache
     restart: always
@@ -86,3 +97,17 @@ services:
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ./database:/database 
+
+  # order.api:
+  #   environment:
+  #     - AzureSQLDatabaseConnection=Server=tcp:learncoding.database.windows.net,1433;Initial Catalog=EShopMicroservices;Persist Security Info=False;User ID=Rahul7884;Password=Rahul@2000;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
+  #   depends_on:
+  #     - orderdb
+  #   ports:
+  #     - "6003:8080"
+  #     - "6063:8081"
+  #   volumes:
+  #     - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+  #     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+  #     - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+  #     - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
