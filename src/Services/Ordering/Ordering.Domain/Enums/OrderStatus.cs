@@ -1,0 +1,30 @@
+﻿namespace Ordering.Domain.Enums;
+
+public enum OrderStatus
+{
+    Pending,
+    Shipped,
+    Draft,
+    Delivered,
+    Cancelled,
+    Returned,
+    Refunded,
+    Completed,
+    Processing,
+    OnHold,
+    Failed,
+    AwaitingPayment,
+    AwaitingShipment,
+    PartiallyShipped,
+    PartiallyDelivered,
+    AwaitingFulfillment,
+    AwaitingPickup,
+    AwaitingConfirmation,
+    AwaitingReview,
+    AwaitingRestock,
+    AwaitingApproval,
+    AwaitingAction,
+    AwaitingResponse,
+    AwaitingCustomerAction,
+    AwaitingSupplierAction,
+}
