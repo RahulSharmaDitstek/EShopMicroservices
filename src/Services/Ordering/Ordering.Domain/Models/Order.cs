@@ -1,0 +1,63 @@
+﻿using Ordering.Domain.Events;
+
+namespace Ordering.Domain.Models;
+
+public class Order : Aggregate<OrderId>
+{
+    public readonly List<OrderItem> _orderItems = [];
+    public IReadOnlyList<OrderItem> OrderItems => _orderItems.AsReadOnly();
+    public CustomerId CustomerId { get; private set; } = default!;
+    public OrderName OrderName { get; private set; } = default!;
+    public Address ShippingAddress { get; private set; } = default!;
+    public Address BillingAddress { get; private set; } = default!;
+    public Payment Payment { get; private set; } = default!;
+    public OrderStatus Status { get; private set; } = OrderStatus.Pending;
+    public decimal TotalPrice
+    {
+        get => OrderItems.Sum(x => x.Price * x.Quantity);
+        private set { }
+    }
+    public static Order CreateOrderItem(OrderId id, CustomerId customerId, OrderName orderName, Address shippingAddress, Address billingAddress, Payment payment)
+    {
+        var order = new Order
+        {
+            Id = id,
+            CustomerId = customerId,
+            OrderName = orderName,
+            ShippingAddress = shippingAddress,
+            BillingAddress = billingAddress,
+            Payment = payment
+        };
+        order.AddDomainEvent(new OrderCreatedDomainEvent(order));
+        return order;
+    }
+    public void UpdateOrderItem(OrderName orderName, Address shippingAddress, Address billingAddress, Payment payment, OrderStatus status)
+    {
+        OrderName = orderName;
+        ShippingAddress = shippingAddress;
+        BillingAddress = billingAddress;
+        Payment = payment;
+        Status = status;
+
+        AddDomainEvent(new OrderUpdatedDomainEvent(this));
+    }
+    public void AddOrderItem(ProductId productId, int quantity, decimal price)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quantity, nameof(quantity));
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(price, nameof(price));
+
+        var orderItem = new OrderItem(Id, productId, quantity, price);
+
+        if (_orderItems.Any(item => item.ProductId == orderItem.ProductId))
+        {
+            throw new InvalidOperationException("Order item with the same product already exists.");
+        }
+        _orderItems.Add(orderItem);
+    }
+    public void RemoveOrderItem(ProductId productId)
+    {
+        var orderItem = _orderItems.FirstOrDefault(item => item.ProductId == productId);
+        if (orderItem is not null)
+            _orderItems.Remove(orderItem);
+    }
+}
