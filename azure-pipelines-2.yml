@@ -1,13 +1,8 @@
-# ASP.NET Core (.NET Framework)
-# Build and test ASP.NET Core projects targeting the full .NET Framework.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
 trigger:
 - main
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'windows-latest'  # Use Windows for full .NET Framework compatibility
 
 variables:
   solution: '**/*.sln'
@@ -15,30 +10,39 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+# Install NuGet CLI
 - task: NuGetToolInstaller@1
-- task: Docker@2
   inputs:
-    command: 'buildAndPush'
-    Dockerfile: '**/Dockerfile'
+    checkLatest: true
 
-- task: DockerCompose@1
-  inputs:
-    containerregistrytype: 'Azure Container Registry'
-    dockerComposeFile: '**/docker-compose.yml'
-    action: 'Run a Docker Compose command'
-
+# Restore NuGet packages
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
 
+# Build the solution using MSBuild
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+    msbuildArgs: >
+      /p:DeployOnBuild=true 
+      /p:WebPublishMethod=Package 
+      /p:PackageAsSingleFile=true 
+      /p:SkipInvalidConfigurations=true 
+      /p:DesktopBuildPackageLocation="$(Build.ArtifactStagingDirectory)\WebApp.zip" 
+      /p:DeployIisAppPath="Default Web Site"
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+# Run tests
 - task: VSTest@2
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+# Publish pipeline artifact (WebApp.zip)
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+    artifact: 'webapp'
+    publishLocation: 'pipeline'
