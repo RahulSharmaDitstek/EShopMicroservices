@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  vmImage: 'windows-latest'  # Use Windows for full .NET Framework compatibility
+  vmImage: 'ubuntu-latest'  # Use Windows for full .NET Framework compatibility
 
 variables:
   solution: '**/*.sln'
