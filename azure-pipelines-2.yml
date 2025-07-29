@@ -16,6 +16,16 @@ variables:
 
 steps:
 - task: NuGetToolInstaller@1
+- task: Docker@2
+  inputs:
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+
+- task: DockerCompose@1
+  inputs:
+    containerregistrytype: 'Azure Container Registry'
+    dockerComposeFile: '**/docker-compose.yml'
+    action: 'Run a Docker Compose command'
 
 - task: NuGetCommand@2
   inputs:
