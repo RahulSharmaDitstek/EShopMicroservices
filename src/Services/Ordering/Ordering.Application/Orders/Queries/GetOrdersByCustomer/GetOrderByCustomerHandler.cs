@@ -5,7 +5,6 @@ public class GetOrderByCustomerHandler(ILogger<GetOrderByCustomerHandler> logger
     {
         try
         {
-<<<<<<< HEAD
             logger.LogInformation("Fetching orders for customer with ID: {CustomerId}", query.CustomerId);
             var customerId = CustomerId.Of(query.CustomerId);
 
@@ -31,17 +30,6 @@ public class GetOrderByCustomerHandler(ILogger<GetOrderByCustomerHandler> logger
             var dtoList = orders.ToOrderDtoList();
 
             return new GetOrderByCustomerResult(dtoList);
-=======
-            logger.LogInformation($"Fetch the Get Order By Customer");
-            var orders = await _dbContext.Orders
-                .Include(o => o.OrderItems)
-                .AsNoTracking()
-                .Where(o => o.CustomerId == CustomerId.Of(query.CustomerId))
-                .OrderBy(o => o.OrderName.Value)
-                .ToListAsync(cancellationToken);
-
-            return new GetOrderByCustomerResult(orders.ToOrderDtoList());
->>>>>>> c5bc8b4a6334653d1e8a8cf72b2406d021f9e706
         }
         catch (Exception)
         {
