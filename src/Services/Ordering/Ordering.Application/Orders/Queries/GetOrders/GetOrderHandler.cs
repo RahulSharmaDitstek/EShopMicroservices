@@ -6,8 +6,13 @@ public class GetOrderHandler(IApplicationDbContext dbContext) : IQueryHandler<Ge
     {
         try
         {
+<<<<<<< HEAD
             var pageIndex = query.PaginationRequest.PageIndex;
             var pageSize = query.PaginationRequest.PageSize;
+=======
+            var pageIndex = query.paginationRequest.PageIndex;
+            var pageSize = query.paginationRequest.PageSize;
+>>>>>>> c5bc8b4a6334653d1e8a8cf72b2406d021f9e706
 
             var totalCount = await dbContext.Orders.LongCountAsync(cancellationToken);
 
