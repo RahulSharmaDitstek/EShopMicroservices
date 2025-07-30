@@ -30,6 +30,7 @@ steps:
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
+  continueOnError: true
 
 # Build the solution using MSBuild
 - task: VSBuild@1
