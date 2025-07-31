@@ -40,6 +40,17 @@ services:
     ports:
       - "6379:6379"   
 
+  messagebroker:
+     container_name: messagebroker
+     hostname: ecommerce-mq
+     environment:
+       - RABBITMQ_DEFAULT_USER=guest
+       - RABBITMQ_DEFAULT_PASS=guest
+     restart: always
+     ports:
+       - "5672:5672"
+       - "15672:15672"
+
   catalog.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -68,6 +79,9 @@ services:
       - ConnectionStrings__Redis=distributedcache:6379
       - GrpcSettings__DiscountUrl= http://discount.grpc:8080
       - VaultUri=https://basketapivaults.vault.azure.net/
+      - MessageBroker__Host=amqp://ecommerce-mq:5672
+      - MessageBroker__Username=guest
+      - MessageBroker__Password=guest
 
     depends_on:
       - basketdb
@@ -100,7 +114,7 @@ services:
 
   # order.api:
   #   environment:
-  #     - AzureSQLDatabaseConnection=Server=tcp:learncoding.database.windows.net,1433;Initial Catalog=EShopMicroservices;Persist Security Info=False;User ID=Rahul7884;Password=Rahul@2000;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
+  #     - ConnectionStrings__AzureSQLDatabaseConnection=Server=tcp:learncoding.database.windows.net,1433;Initial Catalog=EShopMicroservices;Persist Security Info=False;User ID=Rahul7884;Password=Rahul@2000;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
   #   depends_on:
   #     - orderdb
   #   ports:
@@ -111,3 +125,25 @@ services:
   #     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
   #     - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
   #     - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  ordering.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - VaultUri=https://learncodingbyrahul.vault.azure.net/
+      - MessageBroker__Host=amqp://ecommerce-mq:5672
+      - MessageBroker__UserName=guest
+      - MessageBroker__Password=guest
+      - FeatureManagement__OrderFullfilment=false
+
+    depends_on:
+      - messagebroker
+    ports:
+      - "6003:8080"
+      - "6063:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

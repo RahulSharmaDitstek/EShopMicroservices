@@ -1,13 +1,14 @@
-﻿using HealthChecks.UI.Client;
+﻿using BuildingBlocks;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-
 namespace Ordering.API.DependencyInjection;
 public static class DIConfigurations
 {
     public static IServiceCollection AddOrderingWebServices(this IServiceCollection services, ConfigurationManager configuration)
     {
         var assembly = typeof(Program).Assembly;
-        var sqlConnectionString = configuration.GetConnectionString("AzureSQLDatabaseConnection") ?? throw new InvalidOperationException("Azure SQL Database connection string not configured.");
+
+        var sqlConnectionString = KeyVaultConfigLoader.LoadSecret(configuration, "AzureSQLDatabaseConnection", "VaultUri");
 
         services.AddCarter();
         services.AddExceptionHandler<CustomExceptionHandler>();

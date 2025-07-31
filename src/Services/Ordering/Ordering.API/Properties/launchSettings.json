@@ -4,7 +4,9 @@
       "commandName": "Project",
       "launchBrowser": false,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "OrderingSQLDbVault": "https://orderingapidbkeyvault.vault.azure.net/",
+        "VaultUri": "https://learncodingbyrahul.vault.azure.net/"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5003"
@@ -13,7 +15,9 @@
       "commandName": "Project",
       "launchBrowser": false,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "OrderingSQLDbVault": "https://orderingapidbkeyvault.vault.azure.net/",
+        "VaultUri": "https://learncodingbyrahul.vault.azure.net/"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:5053;http://localhost:5003"
@@ -22,7 +26,9 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "OrderingSQLDbVault": "https://orderingapidbkeyvault.vault.azure.net/",
+        "VaultUri": "https://learncodingbyrahul.vault.azure.net/"
       }
     },
     "Container (Dockerfile)": {
@@ -31,7 +37,9 @@
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "environmentVariables": {
         "ASPNETCORE_HTTPS_PORTS": "8081",
-        "ASPNETCORE_HTTP_PORTS": "8080"
+        "ASPNETCORE_HTTP_PORTS": "8080",
+        "OrderingSQLDbVault": "https://orderingapidbkeyvault.vault.azure.net/",
+        "VaultUri": "https://learncodingbyrahul.vault.azure.net/"
       },
       "publishAllPorts": true,
       "useSSL": true
