@@ -6,6 +6,12 @@
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/learncoding/databases/EShopMicroservices",
       "type": "mssql.azure",
       "connectionId": "ConnectionStrings:DatabaseConnection"
+    },
+    "secrets1": {
+      "secretStore": null,
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.KeyVault/vaults/LearnCodingByRahul",
+      "type": "secrets.keyVault",
+      "connectionId": "VaultUri"
     }
   }
 }

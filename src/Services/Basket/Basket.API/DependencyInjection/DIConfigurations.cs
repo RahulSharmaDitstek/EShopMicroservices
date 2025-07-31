@@ -25,13 +25,6 @@ public static class DIConfigurations
             options.Configuration = redisConnString;
         });
 
-        //Use Scrutor library to handle this manually
-        //services.AddScoped<IBasketRepository>(provider =>
-        //{
-        //    var basketRepository = provider.GetService<IBasketRepository>();
-        //    return new CachedBasketRepository(basketRepository, provider.GetRequiredService<IDistributedCache>());
-        //});
-
         //Data Services
         services.AddMarten(options =>
          {
@@ -54,6 +47,8 @@ public static class DIConfigurations
                 return handler;
             });
 
+        //Async Communication Services
+        services.AddMessageBroker(configuration);
         //Exception Handler
         services.AddExceptionHandler<CustomExceptionHandler>();
 

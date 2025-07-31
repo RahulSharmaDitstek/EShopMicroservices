@@ -1,11 +1,11 @@
-﻿using Ordering.Application.Data;
+﻿using BuildingBlocks;
 
 namespace Ordering.Infrastructure.DependencyInjection;
 public static class DIConfigurations
 {
     public static IServiceCollection AddOrderingInfrastructureServices(this IServiceCollection services, ConfigurationManager configuration)
     {
-        var connectionString = configuration.GetConnectionString("AzureSQLDatabaseConnection") ?? throw new InvalidOperationException("Azure SQL Database connection string not configured.");
+        var sqlConnectionString = KeyVaultConfigLoader.LoadSecret(configuration, "AzureSQLDatabaseConnection", "VaultUri");
 
         services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
         services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventInterceptor>();
@@ -18,7 +18,7 @@ public static class DIConfigurations
             {
                 options.AddInterceptors(interceptors);
             }
-            options.UseSqlServer(connectionString);
+            options.UseSqlServer(sqlConnectionString);
         });
         services.AddScoped<IApplicationDbContext, OrderingDbContext>();
         return services;
