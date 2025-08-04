@@ -1,0 +1,91 @@
+﻿@page "/cart"
+@inject IBasketService BasketService
+
+<h3 class="mb-4">🛒 Your Cart</h3>
+
+@if (cart == null || !cart.Items.Any())
+{
+    <div class="alert alert-warning">Your cart is empty.</div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>Deliver to: <strong>Mohali - 140308</strong></h5>
+                    @foreach (var item in cart.Items)
+                    {
+                        <hr />
+                        <div class="row align-items-center mb-3">
+                            <div class="col-md-2">
+                                <img src="/images/placeholder.png" class="img-fluid" alt="@item.ProductName" />
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>@item.ProductName</strong></p>
+                                <p class="text-muted">Color: @item.Color</p>
+                                <p class="fw-bold">₹@item.Price x @item.Quantity</p>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center gap-2">
+                                <button class="btn btn-outline-secondary btn-sm">-</button>
+                                <span>@item.Quantity</span>
+                                <button class="btn btn-outline-secondary btn-sm">+</button>
+                                <button class="btn btn-link text-danger">Remove</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>PRICE DETAILS</h5>
+                    <hr />
+                    <div class="d-flex justify-content-between">
+                        <span>Price (@cart.Items.Count item(s))</span>
+                        <span>₹@cart.Items.Sum(i => i.Price * i.Quantity)</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Discount</span>
+                        <span class="text-success">– ₹@discount</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Platform Fee</span>
+                        <span>₹@platformFee</span>
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-between fw-bold">
+                        <span>Total Amount</span>
+                        <span>₹@totalAmount</span>
+                    </div>
+                    <p class="text-success mt-2">You will save ₹@discount on this order</p>
+                    <button class="btn btn-warning w-100 mt-3">PLACE ORDER</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@code {
+    private ShoppingCartModel? cart;
+
+    private const string UserName = "RahulSharma";
+
+    private decimal discount => Math.Round(cart?.TotalPrice * 0.15M ?? 0); // 15% off
+    private decimal platformFee => 4;
+    private decimal totalAmount => (cart?.TotalPrice ?? 0) - discount + platformFee;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response = await BasketService.GetBasket(UserName);
+            cart = response.ShoppingCartModel;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Failed to load cart: " + ex.Message);
+        }
+    }
+}

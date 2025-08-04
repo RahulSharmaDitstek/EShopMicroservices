@@ -16,6 +16,16 @@ public static class DIConfigurations
                 options.QueueLimit = 5;
             });
         });
+
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowBlazorWasm",
+                policy => policy
+                    .WithOrigins("https://localhost:5055") // Your Blazor WASM app's origin
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials());
+        });
         return services;
     }
 }

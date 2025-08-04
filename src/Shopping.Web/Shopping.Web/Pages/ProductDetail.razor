@@ -1,0 +1,102 @@
+﻿@page "/product/{id:guid}"
+@inject ICatalogService CatalogService
+@inject IBasketService BasketService
+@inject NavigationManager NavigationManager
+
+<h4 class="my-4">📝 Product Details</h4>
+
+@if (product == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<div class="card mb-4 shadow-sm">
+		<img src="@product.ImageFile" class="card-img-top" alt="@product.Name" style="max-height: 400px; object-fit: contain;" />
+		<div class="card-body">
+			<h5 class="card-title">@product.Name</h5>
+			<p class="card-text text-muted">@product.Description</p>
+			<p class="fw-bold">Price: ₹@product.Price</p>
+
+			@if (product.Rating > 0)
+			{
+				<span class="badge bg-success">@product.Rating ★</span>
+			}
+
+			<div class="mt-3 d-flex gap-3">
+				<button class="btn btn-outline-primary" @onclick="() => AddToCart()">Add to Cart</button>
+				<button class="btn btn-warning" @onclick="BuyNow">Buy Now</button>
+
+			</div>
+			<button class="btn btn-outline-primary" @onclick="OnClick">Test Click</button>
+
+
+			@if (!string.IsNullOrEmpty(message))
+			{
+				<div class="alert alert-success mt-3">@message</div>
+			}
+		</div>
+	</div>
+}
+
+@code {
+	[Parameter]
+	public Guid id { get; set; }
+
+	private ProductModel? product;
+	private string message = string.Empty;
+
+	private void OnClick()
+	{
+		message = "Clicked!";
+	}
+	private const string UserName = "eshop-user";
+
+	protected override async Task OnInitializedAsync()
+	{
+		var response = await CatalogService.GetProduct(id);
+		product = response.Product;
+	}
+
+	private async Task AddToCart()
+	{
+		if (product is null) return;
+
+		Console.WriteLine("AddToCart triggered");
+
+		var shoppingCart = new ShoppingCartModel
+		{
+			UserName = UserName,
+			Items = new List<ShoppingCartItemModel>
+		{
+			new ShoppingCartItemModel
+			{
+				ProductId = product.Id,
+				ProductName = product.Name,
+				Price = product.Price,
+				Quantity = 1,
+				Color = "Default"
+			}
+		}
+		};
+
+		var request = new StoreBasketRequest(shoppingCart);
+
+		try
+		{
+			await BasketService.StoreBasket(request);
+			message = $"{product.Name} added to cart.";
+		}
+		catch (Exception ex)
+		{
+			message = $"❌ Failed to add to cart: {ex.Message}";
+		}
+	}
+
+
+	private async Task BuyNow()
+	{
+		await AddToCart();
+		NavigationManager.NavigateTo("/cart");
+	}
+}

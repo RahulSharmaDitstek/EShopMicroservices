@@ -1,0 +1,11 @@
+﻿global using Microsoft.Extensions.Options;
+global using Shopping.Web.Services;
+global using Refit;
+global using Microsoft.AspNetCore.Components.Web;
+global using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+global using Shopping.Web;
+global using Shopping.Web.DependencyInjection;
+global using Shopping.Web.Models.Basket;
+global using Shopping.Web.Models.Catalog;
+global using Shopping.Web.Models.Ordering;
+global using System.Net;

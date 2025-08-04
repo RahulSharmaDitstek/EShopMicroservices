@@ -1,0 +1,24 @@
+﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+
+<div class="page">
+	@if (ShouldShowNavMenu)
+	{
+		<div class="sidebar">
+			<NavMenu />
+		</div>
+	}
+
+
+	<main>
+		<div class="content px-4">
+			@Body
+		</div>
+	</main>
+</div>
+
+@code {
+	private bool ShouldShowNavMenu =>
+		NavigationManager.Uri.Contains("/catalog") ||
+		NavigationManager.Uri.Contains("/product");
+}

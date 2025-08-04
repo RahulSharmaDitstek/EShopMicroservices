@@ -1,0 +1,83 @@
+﻿@page "/"
+@inject NavigationManager NavigationManager
+
+<div class="hero-banner text-center text-white d-flex align-items-center justify-content-center">
+    <div>
+        <h1 class="display-4 fw-bold">🔥 Big Festive Sale is Live!</h1>
+        <p class="lead">Get up to 70% off on electronics, fashion, and more</p>
+        <button class="btn btn-warning mt-3" @onclick="@(() => NavigationManager.NavigateTo("/catalog"))">Shop Now</button>
+    </div>
+</div>
+
+<div class="container my-5">
+    <h3 class="mb-4 text-center">🛍️ Top Categories</h3>
+    <div class="row g-4 justify-content-center">
+        @foreach (var category in Categories)
+        {
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="category-card text-center shadow-sm p-4" @onclick="() => NavigateToCategory(category.Name)">
+                    <div class="icon-container mb-3">
+                        <i class="@category.Icon fa-2x text-primary"></i>
+                    </div>
+                    <h6>@category.Name</h6>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="container my-5">
+    <h3 class="mb-4 text-center">🌟 Season Picks</h3>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var product in FeaturedProducts)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <img src="@product.ImageFile" class="card-img-top" alt="@product.Name" />
+                    <div class="card-body">
+                        <h6 class="card-title">@product.Name</h6>
+                        <p class="text-muted">@product.Description</p>
+                        <p class="fw-bold">₹@product.Price</p>
+                        <button class="btn btn-outline-primary w-100" @onclick="() => NavigateToProduct(product.Id)">View</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="promo-banner d-flex align-items-center justify-content-between p-4 rounded shadow-sm text-white">
+        <div>
+            <h4>🚚 Free Delivery On First Order!</h4>
+            <p>Sign up now and get free delivery on your first purchase.</p>
+        </div>
+        <button class="btn btn-light text-dark">Sign Up</button>
+    </div>
+</div>
+
+@code {
+    private record CategoryItem(string Name, string Icon);
+    private record Product(string Name, string Description, decimal Price, string ImageFile, Guid Id);
+
+    private List<CategoryItem> Categories = new()
+    {
+        new("Electronics", "fas fa-plug"),
+        new("Books", "fas fa-book"),
+        new("Clothes", "fas fa-tshirt"),
+        new("Toys", "fas fa-puzzle-piece")
+    };
+
+    private List<Product> FeaturedProducts = new()
+    {
+        new("iPhone 15", "A17 chip with amazing performance", 999.99m, "images/iphone15.jpg", Guid.NewGuid()),
+        new("Smartwatch", "Track your health and steps", 199.99m, "images/watch.jpg", Guid.NewGuid()),
+        new("Gaming Console", "Next-gen entertainment", 499.99m, "images/console.jpg", Guid.NewGuid())
+    };
+
+    private void NavigateToCategory(string category) =>
+        NavigationManager.NavigateTo($"/catalog/{category}");
+
+    private void NavigateToProduct(Guid id) =>
+        NavigationManager.NavigateTo($"/product/{id}");
+}

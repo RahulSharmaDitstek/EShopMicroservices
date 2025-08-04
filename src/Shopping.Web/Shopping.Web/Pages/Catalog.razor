@@ -1,0 +1,82 @@
+﻿@page "/catalog"
+@page "/catalog/{Category}"
+@inject ICatalogService CatalogService
+
+<h3 class="text-center my-4">🛒 Product Catalog</h3>
+
+<div class="row">
+	
+
+	<!-- Product Grid -->
+	<div class="col-md-9">
+		@if (products == null)
+		{
+			<p><em>Loading products...</em></p>
+		}
+		else
+		{
+			<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+				@foreach (var product in products.Products)
+				{
+					<div class="col">
+						<div class="card h-100 shadow-sm">
+							<NavLink class="text-decoration-none" href="@($"/product/{product.Id}")">
+								<img src="@product.ImageFile" class="card-img-top product-image" alt="@product.Name" />
+							</NavLink>
+							<div class="card-body">
+								<h6 class="card-title">@product.Name</h6>
+								<p class="card-text text-muted text-truncate">@product.Description</p>
+								<p class="fw-bold mb-1">₹@product.Price</p>
+								@if (product.Rating > 0)
+								{
+									<span class="badge bg-success">@product.Rating ★</span>
+								}
+							</div>
+							<div class="card-footer">
+								<h6 class="card-title">AddToCart</h6>
+								<h6 class="card-title">Buy Now</h6>
+
+							</div>
+						</div>
+
+					</div>
+				}
+			</div>
+		}
+	</div>
+</div>
+
+@code {
+	[Parameter] public string? Category { get; set; }
+
+	private GetProductByResponse? products;
+	private List<string> categories = new() { "Books", "Electronics", "Toys", "Clothes" };
+
+	protected override async Task OnParametersSetAsync() => await LoadProductsAsync();
+
+	private async Task LoadProductsAsync()
+	{
+		if (!string.IsNullOrEmpty(Category))
+		{
+			var result = await CatalogService.GetProductsByCategory(Category);
+			products = new GetProductByResponse(result.Products);
+		}
+		else
+		{
+			products = await CatalogService.GetProducts(1, 30);
+			var datas=await CatalogService.GetProduct(new Guid("94ade311-61de-4404-af0c-64d5aa24e8b9"));
+		}
+	}
+
+	private async Task OnCategoryChanged(ChangeEventArgs e)
+	{
+		Category = e.Value?.ToString();
+		await LoadProductsAsync();
+	}
+
+	private async Task ClearFilter()
+	{
+		Category = null;
+		await LoadProductsAsync();
+	}
+}
